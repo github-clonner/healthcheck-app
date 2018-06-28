@@ -1,0 +1,21 @@
+{
+  "apps" : [{
+    "name": "Healthcheck",
+    "script": "./app.js",
+    "watch": true,
+    "ignore_watch": [
+      "node_modules",
+      "log"
+    ],
+    "exec_mode": "cluster",
+    "instances": 1,
+    "env": {
+      "NODE_ENV": "development",
+      "DATABASE_USER":"appname",
+      "DATABASE_PASSWORD":"password",
+      "DATABASE_DB":"dbname",
+      "DATABASE_HOST":"localhost",
+      "DATABASE_PORT":5432
+    }
+  }]
+}

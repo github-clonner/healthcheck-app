@@ -1,0 +1,7 @@
+node_modules/
+log/
+logs/
+*.log
+// sensible data
+config.local.js
+healthcheck.pm2.json

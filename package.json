@@ -1,0 +1,30 @@
+{
+  "name": "healthcheck",
+  "version": "1.2.0",
+  "description": "healthcheck as a (micro) service",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "healthcheck"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.16.3",
+    "mongoose": "^5.1.7",
+    "pg": "^7.4.3",
+    "ping": "^0.2.2",
+    "winston": "3.0.0",
+    "winston-daily-rotate-file": "^3.2.3"
+  },
+  "engines": {
+    "node": "6.9.1",
+    "npm": "5.6.0"
+  },
+  "devDependencies": {
+    "eslint": "^5.0.1"
+  }
+}
