@@ -1,4 +1,5 @@
 const { Client } = require('pg')
+const { get } = require('lodash')
 
 const logger = require('../utils/logger')
 const { formatLogz } = require('../utils/formatLogz')
@@ -34,7 +35,7 @@ function makeDbRequest(requestObj) {
     const logz = formatLogz({
       name: requestObj.name,
       checkType: requestObj.checkType,
-      statusMessage: res.rows[0],
+      statusMessage: get(res.rows[0].now) ? 'Alive' : 'Dead',
       duration
     })
 
