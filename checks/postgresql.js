@@ -35,7 +35,7 @@ function makeDbRequest(requestObj) {
     const logz = formatLogz({
       name: requestObj.name,
       checkType: requestObj.checkType,
-      statusMessage: get(res.rows[0].now) ? 'Alive' : 'Dead',
+      status: get(res,'rows[0].now') ? 'Alive' : 'Dead',
       duration
     })
 
