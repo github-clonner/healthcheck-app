@@ -3,9 +3,9 @@
 This projects is a little express application that runs wherever you want and launches checks periodically.
 You can PING machines, do XHR to other sites, make requests to DB.
 
-Actually there is only PostgreSQL supported, more to come soon.
+Actually there is only PostgreSQL and mongodb supported, more to come soon (elastic search).
 
-The results of checks are stored in daily rotated log files in /logs folder at the root by default.
+The results of checks can be stored in daily rotated log files in /logs folder at the root by default.
 
 For each check you want to do, you have to create an object in config.local.js, all types of checks are covered in the config.example.js file.
 

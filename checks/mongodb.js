@@ -1,50 +1,67 @@
-const mongoose = require('mongoose')
+const MongoClient = require('mongodb').MongoClient
+
 const logger = require('../utils/logger')
+const { formatLogz } = require('../utils/formatLogz')
+
+function checkMongo({ DATABASE_DB, DATABASE_HOST, DATABASE_PORT }) {
+  const connectionString = `mongodb://${DATABASE_HOST}:${DATABASE_PORT}`
+  const connectionOption = {
+    useNewUrlParser: true
+  }
+
+  return new Promise(function (resolve, reject) {
+    MongoClient.connect(connectionString, connectionOption, (err, client) => {
+      if (err) {
+        return reject(err)
+      }
+
+      const adminDb = client.db(DATABASE_DB).admin()
+
+      return adminDb.ping({}, (err, res) => {
+        client.close()
+
+        if (err || !res) {
+          return reject(err)
+        }
+
+        return resolve(res)
+      })
+    })
+  })
+}
 
 function makeDbRequest(requestObj) {
-  logger.log('info', 'db skfugiu')
-  const { DATABASE_USER, DATABASE_PASSWORD, DATABASE_DB, DATABASE_HOST, DATABASE_PORT } = requestObj
+  const start = Date.now()
 
-  const connectionString = `postgres://${DATABASE_USER}:${DATABASE_PASSWORD}@${DATABASE_HOST}:${DATABASE_PORT}/${DATABASE_DB}`
+  function success () {
+    const end = Date.now() - start
 
+    const logz = formatLogz({
+      name: requestObj.name,
+      checkType: requestObj.checkType,
+      status: 'Alive',
+      duration: end
+    })
+
+    logger.log('info', logz)
+  }
+
+  function failure (err) {
+    const end = Date.now() - start
+
+    const logz = formatLogz({
+      name: requestObj.name,
+      checkType: requestObj.checkType,
+      status: "Dead",
+      statusMessage: err.message,
+      duration: end
+    })
+
+    logger.log('error', logz)
+  }
+
+  checkMongo(requestObj)
+    .then(success, failure)
 }
 
 module.exports = makeDbRequest
-
-
-
-
-
-/*
-function checkMongo (client) {
-  return new Promise(function (resolve, reject) {
-    client.collection('system.indexes').findOne({}, function (err, res) {
-      if (err) return reject(err)
-      resolve()
-    })
-  })
-}
-
-function checkElasticsearch (client) {
-  return new Promise(function (resolve, reject) {
-    client.ping({
-      requestTimeout: 3000,
-      hello: 'elasticsearch!'
-    }, function (err, res) {
-      if (err) return reject(err)
-      return resolve()
-    })
-  })
-}
-
-
-
-mongoose.connection.db.admin().ping(function (err, result) {
-  if (err || !result)
-    return next(err || new Error('no ping result'))
-  if (!req.accepts('txt') && req.accepts('json'))
-    return res.json({ ping: 'PONG' })
-  res.type('txt')
-  res.send('PONG')
-})
-*/
