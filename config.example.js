@@ -37,6 +37,16 @@ module.exports = {
       DATABASE_DB: process.env.DATABASE_DB,
       DATABASE_HOST: process.env.DATABASE_HOST,
       DATABASE_PORT: process.env.DATABASE_PORT
+    },
+    {
+      name: 'DATABAYZ 2',
+      description: '5UP3R DB P1NG',
+      checkType: 'mongodb',
+      DATABASE_USER: process.env.DATABASE_USER,
+      DATABASE_PASSWORD: process.env.DATABASE_PASSWORD,
+      DATABASE_DB: process.env.DATABASE_DB,
+      DATABASE_HOST: process.env.DATABASE_HOST,
+      DATABASE_PORT: process.env.DATABASE_PORT
     }
   ]
 }
