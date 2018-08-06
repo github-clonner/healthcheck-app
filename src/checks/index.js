@@ -1,3 +1,5 @@
+const { each } = require('lodash')
+
 const logger = require('../utils/logger')
 const { formatLogz } = require('../utils/formatLogz')
 
@@ -10,22 +12,22 @@ function runChecks (config) {
   const { items } = config
   const logsPromisesContainer = []
 
-  for (var i = 0; i < items.length; i++) {
-    switch (items[i].checkType) {
+  each(items, item => {
+    switch (item.checkType) {
       case "http":
-        logsPromisesContainer.push(httpCheck(items[i]))
+        logsPromisesContainer.push(httpCheck(item))
         break
       case "ping":
-        logsPromisesContainer.push(pingCheck(items[i]))
+        logsPromisesContainer.push(pingCheck(item))
         break
       case "postgresql":
-        logsPromisesContainer.push(postgresqlCheck(items[i]))
+        logsPromisesContainer.push(postgresqlCheck(item))
         break
       case "mongodb":
-        logsPromisesContainer.push(mongodbCheck(items[i]))
+        logsPromisesContainer.push(mongodbCheck(item))
         break
     }
-  }
+  })
 
   function logSuccessPlease (logsPromises) {
     logsPromises.forEach(logz => {
