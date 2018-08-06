@@ -1,4 +1,5 @@
 const logger = require('../utils/logger')
+const { formatLogz } = require('../utils/formatLogz')
 
 const pingCheck = require('./ping')
 const httpCheck = require('./http')
@@ -7,28 +8,28 @@ const mongodbCheck = require('./mongodb')
 
 function runChecks (config) {
   const { items } = config
-  const logsContainer = []
+  const logsPromisesContainer = []
 
   for (var i = 0; i < items.length; i++) {
     switch (items[i].checkType) {
       case "http":
-        logsContainer.push(httpCheck(items[i]))
+        logsPromisesContainer.push(httpCheck(items[i]))
         break
       case "ping":
-        logsContainer.push(pingCheck(items[i]))
+        logsPromisesContainer.push(pingCheck(items[i]))
         break
       case "postgresql":
-        logsContainer.push(postgresqlCheck(items[i]))
+        logsPromisesContainer.push(postgresqlCheck(items[i]))
         break
       case "mongodb":
-        logsContainer.push(mongodbCheck(items[i]))
+        logsPromisesContainer.push(mongodbCheck(items[i]))
         break
     }
   }
 
-  function logSuccessPlease (logs) {
-    logs.forEach(data => {
-      logger.log(data.method, data.logz)
+  function logSuccessPlease (logsPromises) {
+    logsPromises.forEach(logz => {
+      logger.log(logz.method, formatLogz(logz.data))
     })
   }
 
@@ -37,7 +38,7 @@ function runChecks (config) {
     logger.log('error', err)
   }
 
-  Promise.all(logsContainer).then(logSuccessPlease, logErrorPlease)
+  Promise.all(logsPromisesContainer).then(logSuccessPlease, logErrorPlease)
 }
 
 module.exports = runChecks

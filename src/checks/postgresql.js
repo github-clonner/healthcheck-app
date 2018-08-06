@@ -1,8 +1,6 @@
 const { Client } = require('pg')
 const { get } = require('lodash')
 
-const { formatLogz } = require('../utils/formatLogz')
-
 function makeDbRequest(requestObj) {
   const start = new Date()
 
@@ -30,27 +28,30 @@ function makeDbRequest(requestObj) {
   }
 
   function postgresqlSuccess(res) {
-    const duration = new Date() - start
-    const logz = formatLogz({
-      name: requestObj.name,
-      checkType: requestObj.checkType,
-      status: get(res,'rows[0].now') ? 'Alive' : 'Dead',
-      duration
-    })
+    const logz = {
+      method: 'info',
+      data: { name: requestObj.name,
+        checkType: requestObj.checkType,
+        status: get(res,'rows[0].now') ? 'Alive' : 'Dead',
+        duration: new Date() - start
+      }
+    }
 
-    return { method: 'info', logz }
+    return logz
   }
 
   function refused(err) {
-    const duration = new Date() - start
-    const logz = formatLogz({
-      name: requestObj.name,
-      checkType: requestObj.checkType,
-      statusMessage: err.message,
-      duration
-    })
+    const logz = {
+      method: 'error',
+      data: {
+        name: requestObj.name,
+        checkType: requestObj.checkType,
+        statusMessage: err.message,
+        duration: new Date() - start
+      }
+    }
 
-    return { method: 'error', logz }
+    return logz
   }
 
   return connectPromise()

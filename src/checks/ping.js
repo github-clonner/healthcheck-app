@@ -1,7 +1,5 @@
 const ping = require('ping')
 
-const { formatLogz } = require('../utils/formatLogz')
-
 function makePingRequest(requestObj) {
   const start = Date.now()
   const pingResponse = ping.promise.probe(requestObj.host)
@@ -9,32 +7,35 @@ function makePingRequest(requestObj) {
   function success(response) {
     const status = response.alive
 
-    const logz = formatLogz({
-      name: requestObj.name,
-      checkType: requestObj.checkType,
-      status: status ? 'Alive' : 'Dead',
-      duration: response.max
-    })
+    const logz = {
+      method: status ? 'info' : 'error',
+      data: {
+        name: requestObj.name,
+        checkType: requestObj.checkType,
+        status: status ? 'Alive' : 'Dead',
+        duration: response.max
+      }
+    }
 
-    const method = status ? 'info' : 'error'
-
-    return { method, logz }
+    return logz
   }
 
   function failure() {
-    const end = Date.now() - start
-    const logz = formatLogz({
-      name: requestObj.name,
-      checkType: requestObj.checkType,
-      status: "Unreachable",
-      duration: end
-    })
+    const logz = {
+      method: 'error',
+      data: {
+        name: requestObj.name,
+        checkType: requestObj.checkType,
+        status: "Unreachable",
+        duration: Date.now() - start
+      }
+    }
 
-    return { method: 'error', logz }
+    return logz
   }
 
   return pingResponse.then(success, failure)
-    .catch(err => ({ method: 'error', logz: err }))
+    .catch(err => ({ method: 'error', data: err }))
 }
 
 module.exports = makePingRequest
