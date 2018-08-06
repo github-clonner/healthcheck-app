@@ -1,6 +1,5 @@
 const MongoClient = require('mongodb').MongoClient
 
-const logger = require('../utils/logger')
 const { formatLogz } = require('../utils/formatLogz')
 
 function checkMongo({ DATABASE_DB, DATABASE_HOST, DATABASE_PORT }) {
@@ -43,7 +42,7 @@ function makeDbRequest(requestObj) {
       duration: end
     })
 
-    logger.log('info', logz)
+    return { method: 'info', logz }
   }
 
   function failure (err) {
@@ -57,10 +56,10 @@ function makeDbRequest(requestObj) {
       duration: end
     })
 
-    logger.log('error', logz)
+    return { method: 'error', logz }
   }
 
-  checkMongo(requestObj)
+  return checkMongo(requestObj)
     .then(success, failure)
 }
 

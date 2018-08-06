@@ -1,8 +1,9 @@
 const express = require('express')
 
 const healthcheck = require('./checks')
-const config = require('./config.local.js')
+const config = require('./config.local')
 const logger = require('./utils/logger')
+const healthcheckController = require('./healthcheck-controller')
 
 const app = express()
 const { appPort, loopTime } = config
@@ -25,5 +26,7 @@ function startApp () {
 
   return app
 }
+
+app.get('/healthcheck-technical', healthcheckController)
 
 module.exports = startApp()

@@ -3,7 +3,7 @@ module.exports = {
   loopTime: 2000,
   logPath: process.env.HC_LOGS_PATH || 'logs',
   shouldLogToFile: false,
-  items: [
+  items: [ // il faut nommer chaque item au lieu de mettre ça dans un array
     {
       name: 'Google Website',
       description: 'Ping Google website',

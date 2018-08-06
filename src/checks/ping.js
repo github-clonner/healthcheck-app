@@ -1,6 +1,5 @@
 const ping = require('ping')
 
-const logger = require('../utils/logger')
 const { formatLogz } = require('../utils/formatLogz')
 
 function makePingRequest(requestObj) {
@@ -18,7 +17,8 @@ function makePingRequest(requestObj) {
     })
 
     const method = status ? 'info' : 'error'
-    return logger.log(method, logz)
+
+    return { method, logz }
   }
 
   function failure() {
@@ -30,10 +30,11 @@ function makePingRequest(requestObj) {
       duration: end
     })
 
-    logger.log('error', logz)
+    return { method: 'error', logz }
   }
 
-  return pingResponse.then(success, failure).catch(err => logger.log('error', err))
+  return pingResponse.then(success, failure)
+    .catch(err => ({ method: 'error', logz: err }))
 }
 
 module.exports = makePingRequest

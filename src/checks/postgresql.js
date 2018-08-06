@@ -1,7 +1,6 @@
 const { Client } = require('pg')
 const { get } = require('lodash')
 
-const logger = require('../utils/logger')
 const { formatLogz } = require('../utils/formatLogz')
 
 function makeDbRequest(requestObj) {
@@ -39,7 +38,7 @@ function makeDbRequest(requestObj) {
       duration
     })
 
-    return logger.log('info', logz)
+    return { method: 'info', logz }
   }
 
   function refused(err) {
@@ -51,7 +50,7 @@ function makeDbRequest(requestObj) {
       duration
     })
 
-    return logger.log('error', logz)
+    return { method: 'error', logz }
   }
 
   return connectPromise()
