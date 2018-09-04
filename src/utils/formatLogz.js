@@ -4,7 +4,7 @@ function formatLogz (data) {
     checkType: "N/A",
     status: "N/A",
     statusMessage: "N/A",
-    duration: "N/A"
+    duration: -1
   }
 
   return Object.assign(defaultValues, data)

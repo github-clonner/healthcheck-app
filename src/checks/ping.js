@@ -13,7 +13,7 @@ function makePingRequest(requestObj) {
         name: requestObj.name,
         checkType: requestObj.checkType,
         status: status ? 'Alive' : 'Dead',
-        duration: response.max
+        duration: parseFloat(response.max)
       }
     }
 

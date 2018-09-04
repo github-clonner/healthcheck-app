@@ -16,7 +16,7 @@ function makeHttpRequest(requestObj) {
         data: {
           name: requestObj.name,
           checkType: requestObj.checkType,
-          status: res.statusCode,
+          status: JSON.stringify(res.statusCode),
           statusMessage: res.statusMessage,
           duration: Date.now() - start
         }
