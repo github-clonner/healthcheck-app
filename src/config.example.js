@@ -1,9 +1,14 @@
 module.exports = {
   appPort: 1337,
   loopTime: 2000,
-  logPath: process.env.HC_LOGS_PATH || 'logs',
+  logPath: 'logs',
   shouldLogToFile: false,
   checkByUrl: 'client',
+  appVersion: {
+    filePath: './package.json',
+    versionPath: 'version',
+    releaseDatePath: 'date'
+  },
   items: {
     client: {
       name: 'Google Website',
