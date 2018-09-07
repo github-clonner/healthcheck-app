@@ -22,6 +22,10 @@ function formatLogz (data) {
 }
 
 function logVersion (logz) {
+  if (!config.appVersion) {
+    return logz
+  }
+
   const { filePath, versionPath, releaseDatePath } = config.appVersion
 
   if (!(Boolean(filePath) || Boolean(versionPath))) {

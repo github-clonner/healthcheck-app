@@ -46,6 +46,7 @@ function makeDbRequest(requestObj) {
       data: {
         name: requestObj.name,
         checkType: requestObj.checkType,
+        status: 'error',
         statusMessage: err.message,
         duration: new Date() - start
       }

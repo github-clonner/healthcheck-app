@@ -35,12 +35,10 @@ function runChecks (config) {
     })
   }
 
-  function logErrorPlease (err) {
-    logger.log('error', 'In runChecks catch function')
-    logger.log('error', err)
-  }
-
-  Promise.all(logsPromisesContainer).then(logSuccessPlease, logErrorPlease)
+  Promise.all(logsPromisesContainer).then(logSuccessPlease)
+    .catch(error => {
+      logger.log('error', error)
+    })
 }
 
 module.exports = runChecks

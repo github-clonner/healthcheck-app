@@ -20,7 +20,7 @@ function stopLoop () {
 
 function startApp () {
   app.listen(appPort, () => {
-    logger.log('info', `Healthcheck App Started.  Live at http://localhost/${appPort}.`)
+    logger.log('info', `Healthcheck App Started. Live at http://localhost/${appPort}.`)
     startLoop()
   })
 
