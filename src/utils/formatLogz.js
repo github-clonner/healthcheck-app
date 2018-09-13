@@ -1,5 +1,4 @@
 const { get } = require('lodash')
-const path = require('path')
 const fs = require('fs')
 
 const config = require('../config.local')
@@ -33,7 +32,7 @@ function logVersion (logz) {
   }
 
   try {
-    const file = requireJSON(path.join(process.cwd(), filePath))
+    const file = requireJSON(filePath)
     const appVersion = get(file, versionPath)
 
     logz.appVersion = appVersion
