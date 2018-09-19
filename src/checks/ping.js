@@ -34,8 +34,9 @@ function makePingRequest(requestObj) {
     return logz
   }
 
-  return pingResponse.then(success, failure)
-    .catch(err => ({ method: 'error', data: err }))
+  return pingResponse
+    .then(success)
+    .catch(failure)
 }
 
 module.exports = makePingRequest

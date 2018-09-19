@@ -22,6 +22,7 @@ function makeDbRequest(requestObj) {
   function queryPromise () {
     return new Promise(function (resolve, reject) {
       client.query('SELECT NOW()', (err, res) => {
+        client.end()
         return err ? reject(err) : resolve(res)
       })
     })
@@ -32,7 +33,7 @@ function makeDbRequest(requestObj) {
       method: 'info',
       data: { name: requestObj.name,
         checkType: requestObj.checkType,
-        status: get(res,'rows[0].now') ? 'Alive' : 'Dead',
+        status: get(res, 'rows[0].now') ? 'Alive' : 'Dead',
         duration: new Date() - start
       }
     }
@@ -58,11 +59,7 @@ function makeDbRequest(requestObj) {
   return connectPromise()
     .then(queryPromise)
     .then(postgresqlSuccess)
-    .then(() => {
-      client.end()
-    })
     .catch(refused)
-
 }
 
 module.exports = makeDbRequest

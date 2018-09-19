@@ -37,6 +37,7 @@ function runChecks (config) {
 
   Promise.all(logsPromisesContainer).then(logSuccessPlease)
     .catch(error => {
+      logger.log('error', 'Error not catched by a service :')
       logger.log('error', error)
     })
 }

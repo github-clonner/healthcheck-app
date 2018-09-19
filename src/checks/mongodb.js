@@ -60,7 +60,8 @@ function makeDbRequest(requestObj) {
   }
 
   return checkMongo(requestObj)
-    .then(success, failure)
+    .then(success)
+    .catch(failure)
 }
 
 module.exports = makeDbRequest

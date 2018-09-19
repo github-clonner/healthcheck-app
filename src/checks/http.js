@@ -7,7 +7,7 @@ function makeHttpRequest(requestObj) {
   const httpMethod = requestObj.ssl ? https : http
   const { host, port, path, expectedStatusCodes} = requestObj
 
-  return new Promise(function (resolve, reject) {
+  const promisifiedXhr = new Promise(function (resolve, reject) {
     const request = httpMethod.get({ host, port, path }, res => {
       const isStatusExpected = expectedStatusCodes.indexOf(res.statusCode) >= 0
 
@@ -31,7 +31,6 @@ function makeHttpRequest(requestObj) {
         data: {
           name: requestObj.name,
           checkType: requestObj.checkType,
-          status: err.statusCode,
           statusMessage: err.message,
           duration: Date.now() - start
         }
@@ -41,9 +40,14 @@ function makeHttpRequest(requestObj) {
     }
 
     request.on('error', function (err) {
-      error(err)
+      return error(err)
     })
   })
+
+  return promisifiedXhr
+    .catch(err => {
+      return err
+    })
 }
 
 module.exports = makeHttpRequest

@@ -1,6 +1,6 @@
 {
   "name": "healthcheck",
-  "version": "2.2.1",
+  "version": "2.2.2",
   "description": "healthcheck as a (micro) service",
   "main": "src/app.js",
   "scripts": {
