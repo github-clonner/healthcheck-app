@@ -11,6 +11,7 @@ const { appPort, loopTime } = config
 let looper
 
 function startLoop () {
+  healthcheck(config, logger)
   looper = setInterval(() => healthcheck(config, logger), loopTime)
 }
 
