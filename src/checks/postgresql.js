@@ -1,9 +1,6 @@
 const { Client } = require('pg')
 const { get } = require('lodash')
 
-const logger = require('../utils/logger')
-const { formatLogz } = require('../utils/formatLogz')
-
 function makeDbRequest(requestObj) {
   const start = new Date()
 
@@ -25,43 +22,44 @@ function makeDbRequest(requestObj) {
   function queryPromise () {
     return new Promise(function (resolve, reject) {
       client.query('SELECT NOW()', (err, res) => {
+        client.end()
         return err ? reject(err) : resolve(res)
       })
     })
   }
 
   function postgresqlSuccess(res) {
-    const duration = new Date() - start
-    const logz = formatLogz({
-      name: requestObj.name,
-      checkType: requestObj.checkType,
-      status: get(res,'rows[0].now') ? 'Alive' : 'Dead',
-      duration
-    })
+    const logz = {
+      method: 'info',
+      data: { name: requestObj.name,
+        checkType: requestObj.checkType,
+        status: get(res, 'rows[0].now') ? 'Alive' : 'Dead',
+        duration: new Date() - start
+      }
+    }
 
-    return logger.log('info', logz)
+    return logz
   }
 
   function refused(err) {
-    const duration = new Date() - start
-    const logz = formatLogz({
-      name: requestObj.name,
-      checkType: requestObj.checkType,
-      statusMessage: err.message,
-      duration
-    })
+    const logz = {
+      method: 'error',
+      data: {
+        name: requestObj.name,
+        checkType: requestObj.checkType,
+        status: 'error',
+        statusMessage: err.message,
+        duration: new Date() - start
+      }
+    }
 
-    return logger.log('error', logz)
+    return logz
   }
 
   return connectPromise()
     .then(queryPromise)
     .then(postgresqlSuccess)
-    .then(() => {
-      client.end()
-    })
     .catch(refused)
-
 }
 
 module.exports = makeDbRequest

@@ -1,8 +1,5 @@
 const MongoClient = require('mongodb').MongoClient
 
-const logger = require('../utils/logger')
-const { formatLogz } = require('../utils/formatLogz')
-
 function checkMongo({ DATABASE_DB, DATABASE_HOST, DATABASE_PORT }) {
   const connectionString = `mongodb://${DATABASE_HOST}:${DATABASE_PORT}`
   const connectionOption = {
@@ -34,34 +31,37 @@ function makeDbRequest(requestObj) {
   const start = Date.now()
 
   function success () {
-    const end = Date.now() - start
+    const logz = {
+      method: 'info',
+      data: {
+        name: requestObj.name,
+        checkType: requestObj.checkType,
+        status: 'Alive',
+        duration: Date.now() - start
+      }
+    }
 
-    const logz = formatLogz({
-      name: requestObj.name,
-      checkType: requestObj.checkType,
-      status: 'Alive',
-      duration: end
-    })
-
-    logger.log('info', logz)
+    return logz
   }
 
   function failure (err) {
-    const end = Date.now() - start
+    const logz = {
+      method: 'error',
+      data: {
+        name: requestObj.name,
+        checkType: requestObj.checkType,
+        status: "Dead",
+        statusMessage: err.message,
+        duration: Date.now() - start
+      }
+    }
 
-    const logz = formatLogz({
-      name: requestObj.name,
-      checkType: requestObj.checkType,
-      status: "Dead",
-      statusMessage: err.message,
-      duration: end
-    })
-
-    logger.log('error', logz)
+    return logz
   }
 
-  checkMongo(requestObj)
-    .then(success, failure)
+  return checkMongo(requestObj)
+    .then(success)
+    .catch(failure)
 }
 
 module.exports = makeDbRequest

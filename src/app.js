@@ -1,8 +1,9 @@
 const express = require('express')
 
 const healthcheck = require('./checks')
-const config = require('./config.local.js')
+const config = require('./config.local')
 const logger = require('./utils/logger')
+const healthcheckController = require('./healthcheck-controller')
 
 const app = express()
 const { appPort, loopTime } = config
@@ -10,6 +11,7 @@ const { appPort, loopTime } = config
 let looper
 
 function startLoop () {
+  healthcheck(config, logger)
   looper = setInterval(() => healthcheck(config, logger), loopTime)
 }
 
@@ -19,11 +21,13 @@ function stopLoop () {
 
 function startApp () {
   app.listen(appPort, () => {
-    logger.log('info', `Healthcheck App Started.  Live at http://localhost/${appPort}.`)
+    logger.log('info', `Healthcheck App Started. Live at http://localhost/${appPort}.`)
     startLoop()
   })
 
   return app
 }
+
+app.get('/healthcheck-technical', healthcheckController)
 
 module.exports = startApp()
